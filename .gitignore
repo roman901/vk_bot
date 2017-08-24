@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Idea
+*.iml
+.idea
+
+# Vagga
+.vagga
