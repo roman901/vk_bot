@@ -6,14 +6,14 @@ from aiovk import ImplicitSession, API
 from aiovk.longpoll import LongPoll
 from .config import Config
 
-commands = {}
-filters = []
-
 
 class VKBot(object):
     def __init__(self):
         self.config = Config()
         self.logger = logging.getLogger()
+
+        self.commands = {}
+        self.filters = []
 
         self.start_time = int(time.time())
         self.running = True
@@ -25,8 +25,8 @@ class VKBot(object):
         self.logger.info('Init plugins')
         self.init_plugins()
 
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.init_vk())
+        #loop = asyncio.get_event_loop()
+        #loop.run_until_complete(self.init_vk())
 
         self.logger.info('Stopping bot')
 
@@ -79,6 +79,12 @@ class VKBot(object):
             print(action['ts'])
 
         vk_session.close()
+
+    def add_command(self, name, func):
+        self.commands[name] = func
+
+    def add_filter(self, func):
+        self.filters.append(func)
 
     def stop(self):
         self.running = False

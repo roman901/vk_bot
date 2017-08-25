@@ -1,7 +1,7 @@
-global commands
+from run import vk_bot
 
 
 def c_test():
     print('Test passed')
 
-commands['test'] = c_test
+vk_bot.add_command('test', c_test)

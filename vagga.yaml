@@ -11,4 +11,4 @@ commands:
   run: !Command
     description: Run VK_Bot
     container: alpine
-    run: [python3, vk_bot.py]
+    run: [python3, run.py]

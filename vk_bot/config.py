@@ -17,3 +17,6 @@ class BaseConfig(object):
     USER_PASSWORD = 'password'
     LOG_TO_FILE = True
     LOG_FILENAME = 'vk_bot.log'
+
+    START_SYM = '!'
+    PREFIX = '[BOT] '
