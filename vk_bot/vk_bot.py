@@ -1,13 +1,18 @@
 import logging
 import os
+import time
 from .config import Config
+
+commands = {}
+filters = []
 
 
 class VKBot(object):
     def __init__(self):
         self.config = Config()
         self.logger = logging.getLogger()
-        self.plugins = []
+
+        self.start_time = int(time.time())
 
     def run(self):
         self.init_logging()
@@ -15,7 +20,8 @@ class VKBot(object):
 
         self.logger.info('Init plugins')
         self.init_plugins()
-        self.logger.info('Loaded {} plugins'.format(len(self.plugins)))
+
+        commands['test']()
 
     def init_logging(self):
         self.logger.setLevel(logging.INFO)
@@ -34,8 +40,13 @@ class VKBot(object):
             self.logger.addHandler(fh)
 
     def init_plugins(self):
+        # TODO(spark): move plugin dir to config
         plugins = os.listdir('plugins')
         for p in plugins:
             if p.endswith('.py') and not p.startswith('.'):
                 self.logger.debug('Found plugin {}'.format(p))
-                self.plugins.append(p)
+
+                # TODO(spark): add capability to ignore plugins
+                self.logger.debug('Try to load plugin {}'.format(p))
+                filename = 'plugins/{}'.format(p)
+                exec(compile(open(filename, "rb").read(), filename, 'exec'))
