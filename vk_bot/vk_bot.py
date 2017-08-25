@@ -9,9 +9,10 @@ class VKBot(object):
 
     def run(self):
         self.init_logging()
-        logging.debug('Starting VKBot')
+        self.logger.info('Starting VKBot')
 
     def init_logging(self):
+        self.logger.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         sh = logging.StreamHandler()
         sh.setFormatter(formatter)
