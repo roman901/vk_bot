@@ -1,0 +1,11 @@
+containers:
+  alpine:
+    setup:
+      - !Alpine v3.6
+      - !Py3Requirements "requirements.txt"
+
+commands:
+  run: !Command
+    description: Run VK_Bot
+    container: alpine
+    run: [python3, vk_bot.py]
