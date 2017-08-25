@@ -6,3 +6,4 @@ print('Start using {}'.format(config_file))
 
 vk_bot = VKBot()
 vk_bot.config.apply(config_file)
+vk_bot.run()

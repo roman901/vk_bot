@@ -10,4 +10,8 @@ class Config(dict):
 
 
 class BaseConfig(object):
+    DEBUG = False
     APP_ID = 0
+
+    LOG_TO_FILE = True
+    LOG_FILENAME = 'vk_bot.log'
