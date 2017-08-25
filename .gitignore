@@ -107,4 +107,4 @@ ENV/
 # Vagga
 .vagga
 
-config.local.py
+local_config.py
