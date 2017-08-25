@@ -2,6 +2,7 @@ containers:
   alpine:
     setup:
       - !Alpine v3.6
+      - !Install [ca-certificates]
       - !PipConfig
         dependencies: true
       - !Py3Requirements "requirements.txt"

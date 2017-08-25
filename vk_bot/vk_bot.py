@@ -1,6 +1,9 @@
 import logging
 import os
 import time
+import asyncio
+from aiovk import ImplicitSession, API
+from aiovk.longpoll import LongPoll
 from .config import Config
 
 commands = {}
@@ -13,6 +16,7 @@ class VKBot(object):
         self.logger = logging.getLogger()
 
         self.start_time = int(time.time())
+        self.running = True
 
     def run(self):
         self.init_logging()
@@ -21,7 +25,10 @@ class VKBot(object):
         self.logger.info('Init plugins')
         self.init_plugins()
 
-        commands['test']()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.init_vk())
+
+        self.logger.info('Stopping bot')
 
     def init_logging(self):
         self.logger.setLevel(logging.INFO)
@@ -50,3 +57,28 @@ class VKBot(object):
                 self.logger.debug('Try to load plugin {}'.format(p))
                 filename = 'plugins/{}'.format(p)
                 exec(compile(open(filename, "rb").read(), filename, 'exec'))
+
+    async def init_vk(self):
+        vk_session = None
+        if self.config['IMPLICIT']:
+            vk_session = ImplicitSession(self.config['USER_LOGIN'], self.config['USER_PASSWORD'],
+                                         self.config['APP_ID'], ['messages'])
+        else:
+            # TODO(spark): implement TokenSession
+            pass
+
+        self.logger.info('Auth in VK...')
+        await vk_session.authorize()
+
+        vk_api = API(vk_session)
+        vk_lp = LongPoll(vk_api, mode=0)
+
+        while self.running:
+            # Main working loop
+            action = await vk_lp.wait()
+            print(action['ts'])
+
+        vk_session.close()
+
+    def stop(self):
+        self.running = False
