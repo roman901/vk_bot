@@ -19,6 +19,8 @@ class VKBot(object):
         self.start_time = int(time.time())
         self.running = True
 
+        self.vk_api = None
+
     def run(self):
         self.init_logging()
         self.logger.info('Starting VKBot')
@@ -71,13 +73,13 @@ class VKBot(object):
         self.logger.info('Auth in VK...')
         await vk_session.authorize()
 
-        vk_api = API(vk_session)
+        self.vk_api = vk_api = API(vk_session)
         vk_lp = LongPoll(vk_api, mode=0)
 
         while self.running:
             # Main working loop
             response = await vk_lp.wait()
-            print(response)
+
             for action in response['updates']:
                 if action[0] is 4:
                     sender = action[3]
@@ -88,6 +90,7 @@ class VKBot(object):
                         # Groupchat
                         # TODO(spark): API request to parse info
                         pass
+
                     for f in self.filters:
                         await f(vk_api, sender, message)
 
@@ -98,6 +101,7 @@ class VKBot(object):
                         else:
                             await vk_api.messages.send(peer_id=sender,
                                 message='{}Command not found'.format(self.config['PREFIX']))
+
         vk_session.close()
 
     def add_command(self, name, func):
@@ -105,6 +109,10 @@ class VKBot(object):
 
     def add_filter(self, func):
         self.filters.append(func)
+
+    async def send_message(self, destination, message):
+        await self.vk_api.messages.send(peer_id=destination,
+                                   message='{}{}'.format(self.config['PREFIX'], message))
 
     def stop(self):
         self.running = False

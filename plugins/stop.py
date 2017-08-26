@@ -4,7 +4,5 @@ class Plugin:
         self.vk_bot.add_command('stop', self.stop)
 
     async def stop(self, vk_api, sender, message):
-        # TODO(spark): Answer pong to VK API
-        await vk_api.messages.send(peer_id=sender,
-                                   message='{}Bot stopped'.format(self.vk_bot.config['PREFIX']))
+        await self.vk_bot.send_message(sender, 'Bot stopped')
         self.vk_bot.stop()
