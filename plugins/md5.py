@@ -8,6 +8,8 @@ class Plugin:
 
     async def md5(self, sender, message):
         message = message[4:]
-        await self.vk_bot.send_message(sender,
-                            'MD5 hash: {}'.format(hashlib.md5(message.encode('utf-8')).hexdigest()))
-
+        if len(message) is 0:
+            await self.vk_bot.send_message(sender, 'Usage: !md5 text')
+        else:
+            await self.vk_bot.send_message(sender,
+                                           'MD5 hash: {}'.format(hashlib.md5(message.encode('utf-8')).hexdigest()))
