@@ -5,4 +5,4 @@ class Plugin:
 
     async def dice(self, sender, sender_id, message):
         # TODO(spark): Answer pong to VK API
-        pass
+        return True

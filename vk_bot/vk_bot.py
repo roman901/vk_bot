@@ -6,11 +6,13 @@ import asyncio
 from aiovk import ImplicitSession, API
 from aiovk.longpoll import LongPoll
 from .config import Config
+from .database import Database
 
 
 class VKBot(object):
     def __init__(self):
         self.config = Config()
+        self.database = Database(self)
         self.logger = logging.getLogger()
 
         self.commands = {}
@@ -85,7 +87,7 @@ class VKBot(object):
                 if action[0] is 4:
                     message_id = action[1]
                     sender = action[3]
-                    sender_id = 0
+                    sender_id = sender
                     message = str(action[6])
                     self.logger.debug('Got message: {}'.format(message))
 
@@ -95,8 +97,15 @@ class VKBot(object):
                         g_response = await vk_api.messages.getById(message_ids=message_id)
                         sender_id = g_response['items'][0]['user_id']
 
+                    f_flag = False
                     for f in self.filters:
-                        await f(sender, sender_id, message)
+                        f_res = await f(sender, sender_id, message)
+                        if f_res is False:
+                            f_flag = True
+                            continue
+
+                    if f_flag:
+                        continue
 
                     if message.startswith(self.config['COMMAND_SYMBOL']):
                         message = message[1:]

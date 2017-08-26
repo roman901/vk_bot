@@ -21,6 +21,7 @@ class BaseConfig(object):
     LOG_FILENAME = 'vk_bot.log'
 
     PLUGINS_PATH = 'plugins'
+    STORAGE_PATH = 'storage/db.db'
 
     COMMAND_SYMBOL = '!'
     PREFIX = '[BOT] '

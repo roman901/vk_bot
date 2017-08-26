@@ -108,3 +108,4 @@ ENV/
 .vagga
 
 local_config.py
+*.db
