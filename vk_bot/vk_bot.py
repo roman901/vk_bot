@@ -92,12 +92,12 @@ class VKBot(object):
                         pass
 
                     for f in self.filters:
-                        await f(vk_api, sender, message)
+                        await f(sender, message)
 
                     if message.startswith(self.config['COMMAND_SYMBOL']):
                         message = message[1:]
                         if message in self.commands:
-                            await self.commands[message](vk_api, sender, message)
+                            await self.commands[message](sender, message)
                         else:
                             await vk_api.messages.send(peer_id=sender,
                                 message='{}Command not found'.format(self.config['PREFIX']))
