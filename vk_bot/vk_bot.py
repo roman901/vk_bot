@@ -98,7 +98,7 @@ class VKBot(object):
                         message = message[1:]
                         flag = False
                         for c in self.commands:
-                            if message.startswith(c):
+                            if message.startswith(c) and not flag:
                                 flag = True
                                 command = message.split(' ')[0]
                                 await self.commands[command](sender, message)
