@@ -81,7 +81,7 @@ class VKBot(object):
             for action in response['updates']:
                 if action[0] is 4:
                     sender = action[3]
-                    message = action[6]
+                    message = str(action[6])
                     self.logger.debug('Got message: {}'.format(message))
 
                     if sender > 2000000000:
@@ -89,8 +89,15 @@ class VKBot(object):
                         # TODO(spark): API request to parse info
                         pass
                     for f in self.filters:
-                        f(sender, message)
+                        await f(vk_api, sender, message)
 
+                    if message.startswith(self.config['COMMAND_SYMBOL']):
+                        message = message[1:]
+                        if message in self.commands:
+                            await self.commands[message](vk_api, sender, message)
+                        else:
+                            await vk_api.messages.send(peer_id=sender,
+                                message='{}Command not found'.format(self.config['PREFIX']))
         vk_session.close()
 
     def add_command(self, name, func):

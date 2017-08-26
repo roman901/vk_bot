@@ -3,6 +3,7 @@ class Plugin:
         self.vk_bot = vk_bot
         self.vk_bot.add_command('ping', self.ping)
 
-    def ping(self):
-        # TODO(spark): Answer pong to VK API
-        print('pong')
+    async def ping(self, vk_api, sender, message):
+        await vk_api.messages.send(peer_id=sender,
+                                  message='{}Pong'.format(self.vk_bot.config['PREFIX']))
+

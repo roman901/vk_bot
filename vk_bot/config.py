@@ -22,5 +22,5 @@ class BaseConfig(object):
 
     PLUGINS_PATH = 'plugins'
 
-    START_SYM = '!'
+    COMMAND_SYMBOL = '!'
     PREFIX = '[BOT] '
