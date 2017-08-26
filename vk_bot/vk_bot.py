@@ -96,7 +96,7 @@ class VKBot(object):
                         sender_id = g_response['items'][0]['user_id']
 
                     for f in self.filters:
-                        await f(sender, message)
+                        await f(sender, sender_id, message)
 
                     if message.startswith(self.config['COMMAND_SYMBOL']):
                         message = message[1:]
@@ -108,7 +108,7 @@ class VKBot(object):
                                 if command in self.admin_commands and sender_id not in self.config['ADMINS']:
                                     await self.send_message(sender, 'Access denied')
                                 else:
-                                    await self.commands[command](sender, message)
+                                    await self.commands[command](sender, sender_id, message)
                         if flag is False:
                             await self.send_message(sender, 'Command not found')
 

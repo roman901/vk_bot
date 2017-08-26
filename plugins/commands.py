@@ -3,7 +3,7 @@ class Plugin:
         self.vk_bot = vk_bot
         self.vk_bot.add_command('commands', self.commands)
 
-    async def commands(self, sender, message):
+    async def commands(self, sender, sender_id, message):
         msg = 'List of registered commands:\n'
         for c in self.vk_bot.commands:
             msg += c
