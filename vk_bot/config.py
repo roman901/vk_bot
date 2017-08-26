@@ -24,3 +24,5 @@ class BaseConfig(object):
 
     COMMAND_SYMBOL = '!'
     PREFIX = '[BOT] '
+
+    ADMINS = []

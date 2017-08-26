@@ -15,6 +15,7 @@ class VKBot(object):
 
         self.commands = {}
         self.filters = []
+        self.admin_commands = []
 
         self.start_time = int(time.time())
         self.running = True
@@ -82,14 +83,17 @@ class VKBot(object):
 
             for action in response['updates']:
                 if action[0] is 4:
+                    message_id = action[1]
                     sender = action[3]
+                    sender_id = 0
                     message = str(action[6])
                     self.logger.debug('Got message: {}'.format(message))
 
                     if sender > 2000000000:
                         # Groupchat
-                        # TODO(spark): API request to parse info
-                        pass
+                        # TODO(spark): cacher module for IDs (may be useful for history plugin
+                        g_response = await vk_api.messages.getById(message_ids=message_id)
+                        sender_id = g_response['items'][0]['user_id']
 
                     for f in self.filters:
                         await f(sender, message)
@@ -101,14 +105,19 @@ class VKBot(object):
                             if message.startswith(c) and not flag:
                                 flag = True
                                 command = message.split(' ')[0]
-                                await self.commands[command](sender, message)
+                                if command in self.admin_commands and sender_id not in self.config['ADMINS']:
+                                    await self.send_message(sender, 'Access denied')
+                                else:
+                                    await self.commands[command](sender, message)
                         if flag is False:
-                            self.send_message(sender, 'Command not found')
+                            await self.send_message(sender, 'Command not found')
 
         vk_session.close()
 
-    def add_command(self, name, func):
+    def add_command(self, name, func, admin_only=False):
         self.commands[name] = func
+        if admin_only:
+            self.admin_commands.append(name)
 
     def add_filter(self, func):
         self.filters.append(func)
