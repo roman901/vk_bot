@@ -7,5 +7,7 @@ class Plugin:
         msg = 'List of registered commands:\n'
         for c in self.vk_bot.commands:
             msg += c
+            if c in self.vk_bot.admin_commands:
+                msg += ' [admin command]'
             msg += '\n'
         await self.vk_bot.send_message(sender, msg)
