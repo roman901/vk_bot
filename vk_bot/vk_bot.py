@@ -76,8 +76,20 @@ class VKBot(object):
 
         while self.running:
             # Main working loop
-            action = await vk_lp.wait()
-            print(action)
+            response = await vk_lp.wait()
+            print(response)
+            for action in response['updates']:
+                if action[0] is 4:
+                    sender = action[3]
+                    message = action[6]
+                    self.logger.debug('Got message: {}'.format(message))
+
+                    if sender > 2000000000:
+                        # Groupchat
+                        # TODO(spark): API request to parse info
+                        pass
+                    for f in self.filters:
+                        f(sender, message)
 
         vk_session.close()
 
