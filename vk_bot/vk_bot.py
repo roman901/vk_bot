@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 import time
 import asyncio
 from aiovk import ImplicitSession, API
@@ -25,8 +26,8 @@ class VKBot(object):
         self.logger.info('Init plugins')
         self.init_plugins()
 
-        #loop = asyncio.get_event_loop()
-        #loop.run_until_complete(self.init_vk())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.init_vk())
 
         self.logger.info('Stopping bot')
 
@@ -47,16 +48,16 @@ class VKBot(object):
             self.logger.addHandler(fh)
 
     def init_plugins(self):
-        # TODO(spark): move plugin dir to config
-        plugins = os.listdir('plugins')
-        for p in plugins:
-            if p.endswith('.py') and not p.startswith('.'):
-                self.logger.debug('Found plugin {}'.format(p))
-
-                # TODO(spark): add capability to ignore plugins
-                self.logger.debug('Try to load plugin {}'.format(p))
-                filename = 'plugins/{}'.format(p)
-                exec(compile(open(filename, "rb").read(), filename, 'exec'))
+        path = self.config['PLUGINS_PATH']
+        sys.path.insert(0, path)
+        for f in os.listdir(path):
+            fname, ext = os.path.splitext(f)
+            if ext == '.py':
+                self.logger.debug('Found plugin {}'.format(fname))
+                mod = __import__(fname)
+                mod.Plugin(self)
+                self.logger.debug('Loaded plugin {}'.format(fname))
+        sys.path.pop(0)
 
     async def init_vk(self):
         vk_session = None
@@ -76,7 +77,7 @@ class VKBot(object):
         while self.running:
             # Main working loop
             action = await vk_lp.wait()
-            print(action['ts'])
+            print(action)
 
         vk_session.close()
 

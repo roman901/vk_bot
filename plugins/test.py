@@ -1,7 +1,4 @@
-from run import vk_bot
-
-
-def c_test():
-    print('Test passed')
-
-vk_bot.add_command('test', c_test)
+class Plugin:
+    def __init__(self, vk_bot):
+        self.vk_bot = vk_bot
+        print('Test plugin loaded')

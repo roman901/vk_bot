@@ -11,12 +11,16 @@ class Config(dict):
 
 class BaseConfig(object):
     DEBUG = False
+
     APP_ID = 0
     IMPLICIT = True
     USER_LOGIN = 'test@vk.com'
     USER_PASSWORD = 'password'
+
     LOG_TO_FILE = True
     LOG_FILENAME = 'vk_bot.log'
+
+    PLUGINS_PATH = 'plugins'
 
     START_SYM = '!'
     PREFIX = '[BOT] '
