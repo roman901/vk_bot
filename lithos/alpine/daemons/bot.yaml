@@ -1,0 +1,19 @@
+user-id: 1
+group-id: 1
+fileno-limit: 100ki
+memory-limit: 4Gi
+cpu-shares: 1024
+volumes:
+  /state: !Statedir {}
+  /log: !Persistent
+    path: /log
+    mkdir: true
+    mode: 0o700
+    user: 1
+    group: 1
+workdir: /app
+environ:
+  VK_BOT_CONFIG = prod_config.ProdConfig
+executable: /usr/bin/python3
+arguments:
+- /app/run.py
