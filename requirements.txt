@@ -1,2 +1,3 @@
 import_string==0.1.0
 aiovk==1.3.0
+tinydb==3.4.1
