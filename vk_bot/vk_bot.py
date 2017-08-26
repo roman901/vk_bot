@@ -96,11 +96,14 @@ class VKBot(object):
 
                     if message.startswith(self.config['COMMAND_SYMBOL']):
                         message = message[1:]
-                        if message in self.commands:
-                            await self.commands[message](sender, message)
-                        else:
-                            await vk_api.messages.send(peer_id=sender,
-                                message='{}Command not found'.format(self.config['PREFIX']))
+                        flag = False
+                        for c in self.commands:
+                            if message.startswith(c):
+                                flag = True
+                                command = message.split(' ')[0]
+                                await self.commands[command](sender, message)
+                        if flag is False:
+                            self.send_message(sender, 'Command not found')
 
         vk_session.close()
 
