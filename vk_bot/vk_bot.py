@@ -77,7 +77,7 @@ class VKBot(object):
         await vk_session.authorize()
 
         self.vk_api = vk_api = API(vk_session)
-        vk_lp = LongPoll(vk_api, mode=0)
+        vk_lp = LongPoll(vk_api, mode=2)
 
         while self.running:
             # Main working loop
@@ -93,8 +93,7 @@ class VKBot(object):
 
                     if sender > 2000000000:
                         # Groupchat
-                        g_response = await vk_api.messages.getById(message_ids=message_id)
-                        sender_id = g_response['items'][0]['user_id']
+                        sender_id = action[7]['from']
 
                     f_flag = False
                     for f in self.filters:
