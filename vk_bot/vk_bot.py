@@ -106,7 +106,7 @@ class VKBot(object):
                     if f_flag:
                         continue
 
-                    if message.startswith(self.config['COMMAND_SYMBOL']):
+                    if message.startswith(self.config['COMMAND_SYMBOL']) and message[1] is not ' ':
                         message = message[1:]
                         flag = False
                         for c in self.commands:
