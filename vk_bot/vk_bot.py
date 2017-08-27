@@ -93,7 +93,7 @@ class VKBot(object):
 
                     if sender > 2000000000:
                         # Groupchat
-                        sender_id = action[7]['from']
+                        sender_id = int(action[7]['from'])
 
                     f_flag = False
                     for f in self.filters:
