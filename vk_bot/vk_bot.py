@@ -93,7 +93,6 @@ class VKBot(object):
 
                     if sender > 2000000000:
                         # Groupchat
-                        # TODO(spark): cacher module for IDs (may be useful for history plugin)
                         g_response = await vk_api.messages.getById(message_ids=message_id)
                         sender_id = g_response['items'][0]['user_id']
 
