@@ -3,7 +3,7 @@ class Plugin:
         self.vk_bot = vk_bot
         self.vk_bot.add_command('me', self.me)
 
-    async def me(self, sender, sender_id, message):
+    async def me(self, sender, sender_id, message, attachment):
         msg = 'Information about me:\n'
         info = await self.vk_bot.vk_api.users.get(user_id=sender_id,
                                                   fields='bdate,city,country,status,followers_count,'

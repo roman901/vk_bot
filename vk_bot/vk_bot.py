@@ -68,7 +68,7 @@ class VKBot(object):
         vk_session = None
         if self.config['IMPLICIT']:
             vk_session = ImplicitSession(self.config['USER_LOGIN'], self.config['USER_PASSWORD'],
-                                         self.config['APP_ID'], ['messages'])
+                                         self.config['APP_ID'], ['messages', 'wall'])
         else:
             # TODO(spark): implement TokenSession
             pass
@@ -89,15 +89,16 @@ class VKBot(object):
                     sender = action[3]
                     sender_id = sender
                     message = str(action[6])
+                    attachment = action[7]
                     self.logger.debug('Got message: {}'.format(message))
 
                     if sender > 2000000000:
                         # Groupchat
-                        sender_id = int(action[7]['from'])
+                        sender_id = int(attachment['from'])
 
                     f_flag = False
                     for f in self.filters:
-                        f_res = await f(sender, sender_id, message)
+                        f_res = await f(sender, sender_id, message, attachment)
                         if f_res is False:
                             f_flag = True
                             continue
@@ -115,7 +116,7 @@ class VKBot(object):
                                 if command in self.admin_commands and sender_id not in self.config['ADMINS']:
                                     await self.send_message(sender, 'Access denied')
                                 else:
-                                    await self.commands[command](sender, sender_id, message)
+                                    await self.commands[command](sender, sender_id, message, attachment)
                         if flag is False:
                             await self.send_message(sender, 'Command not found')
 
